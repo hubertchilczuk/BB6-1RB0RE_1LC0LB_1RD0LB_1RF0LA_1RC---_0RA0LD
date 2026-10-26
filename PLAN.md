@@ -13,14 +13,19 @@ i niezależnej recenzji.
 ## Kroki
 
 ### 1. Zwarty opis zachowania maszyny (reguły na licznikach)
-- [ ] zbadać trajektorię na poziomie cykli: które węzły i stany naprawdę występują, jak zmieniają się (N, M, k)
-- [ ] znaleźć kodowanie konfiguracji jako kilka liczników i małą liczbę reguł przejścia (jak w dowodach busycoq)
-- [ ] sprawdzić reguły symulacją (`fsim`) na wielu instancjach
-- [ ] udowodnić niezatrzymywanie się z reguł: niezmiennik + indukcja (najpierw na papierze / w Pythonie)
+- [x] zbadać trajektorię na poziomie cykli (`an/sweepdump.c`: taśma jako lista „cyfr” przy każdym przemiataniu)
+- [x] kodowanie: `Z w^N T (0 1)^M 0`, 6 wzorców strefy Z, w = `8` lub `0 3 1`, rodzina T = `0 4 3^k 2`
+- [x] fazy: A (strefa zużywa P kopii w, dopisuje dM par; 3232 przemiatania na lemat A węzła startowego),
+      B (konwersja `(0 1)^M` -> ~M/2 ósemek + kilka tys. par); M rośnie 8,40-8,85 razy na cykl
+- [x] wniosek: dynamika strefy jest skończona i deterministyczna, ale nieregularna - nie ma zbioru kilku
+      reguł licznikowych; zwarty opis = 6 stref x lematy A/B + skończona tabela przejść.
+      Formalizacja musi mechanicznie sprawdzić lematy (krok 3, wariant „weryfikowany symulator”).
+- [x] maszyna jest w busycoq (gałąź BB6, `verify/Eqv_Misc.v`, TM44) udowodniona jako równoważna
+      `1LB0LA_1RC0LA_1RF0LD_1RA0RE_1RB---_0RD0LC` - dowód rozstrzyga obie
 
 ### 2. Opis dla ludzi (`PROOF.md`)
-- [ ] notacja konfiguracji, reguły, schemat dowodu, skąd bierze się nieskończony wzrost
-- [ ] powiązanie z dowodem komputerowym (`proof4.json`, `verify4`) jako niezależnym potwierdzeniem
+- [x] notacja konfiguracji, fazy A/B, schemat dowodu, skąd bierze się nieskończony wzrost
+- [x] powiązanie z dowodem komputerowym (`proof4.json`, `verify4`) i baza zaufania
 
 ### 3. Formalizacja w Rocq
 - [ ] zainstalować Rocq/Coq, sklonować busycoq (ccz181078), zbudować i przejrzeć istniejące dowody BB6 (`verify/`)
@@ -40,3 +45,5 @@ i niezależnej recenzji.
 
 ## Dziennik
 - 2026-10-26: plan zapisany; start kroku 1.
+- 2026-10-26: krok 1 i 2 zrobione (PROOF.md). Brak krótkiego opisu regułowego -> krok 3 idzie wariantem
+  z weryfikowanym symulatorem; najpierw sprawdzić, co z busycoq (RWLAcc, Inductive, Compute) da się użyć.
