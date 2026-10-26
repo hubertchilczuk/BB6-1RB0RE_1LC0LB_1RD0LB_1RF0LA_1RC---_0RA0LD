@@ -1,0 +1,6 @@
+4x10 clauses=36773 time=1.0s -> UNSAT
+4x14 clauses=73001 time=4.7s -> UNSAT
+5x12 clauses=81897 time=8.3s -> UNSAT
+5x16 clauses=146785 time=31.9s -> UNSAT
+6x14 clauses=159491 time=109.8s -> UNSAT
+6x20 clauses=328305 time=505.0s -> UNSAT

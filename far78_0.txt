@@ -1,0 +1,1 @@
+n=7 tried 23836540 found 0

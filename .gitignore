@@ -1,0 +1,11 @@
+# compiled simulators (rebuild from *.c / *.cpp)
+*.exe
+# simulator traces / lemma-B evidence (regenerable, ~20 GB; kept on disk only)
+*.rt
+pv_*
+pvA_*
+p[0-9]*_*
+tmp_*
+smp_*
+chain_in.txt
+chain_out.txt

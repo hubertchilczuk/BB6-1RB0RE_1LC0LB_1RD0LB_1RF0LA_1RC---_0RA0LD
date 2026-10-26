@@ -1,0 +1,82 @@
+context types: ['R8:3|0 1|0', 'R8:7 0 2|0 1|0', 'R031:0 4 3^k 2', 'R031:1 1|1 0|']
+0 R031:0 4 3^k 2 r=18 M=3306 k=2801 CANON totals {'CANON': 4}
+50 R8:3|0 1|0 r=37 M=534 k=None CANON totals {'CANON': 52}
+100 R8:3|0 1|0 r=12 M=1188 k=None CANON totals {'CANON': 98}
+150 R8:3|0 1|0 r=35 M=2645 k=None CANON totals {'CANON': 152}
+200 R031:0 4 3^k 2 r=1 M=1846 k=1720 CANON totals {'CANON': 199}
+250 R031:1 1|1 0| r=15 M=2606 k=None CANON totals {'CANON': 250}
+300 R031:0 4 3^k 2 r=19 M=3058 k=758 CANON totals {'CANON': 298}
+350 R8:3|0 1|0 r=98 M=3990 k=None CANON totals {'CANON': 391}
+400 R031:0 4 3^k 2 r=21 M=2965 k=2750 CANON totals {'CANON': 398}
+450 R031:1 1|1 0| r=16 M=820 k=None CANON totals {'CANON': 449}
+500 R8:7 0 2|0 1|0 r=1 M=2390 k=None CANON totals {'CANON': 499}
+550 R031:0 4 3^k 2 r=25 M=3910 k=908 CANON totals {'CANON': 553}
+600 R8:7 0 2|0 1|0 r=8 M=3044 k=None CANON totals {'CANON': 599}
+650 R8:7 0 2|0 1|0 r=0 M=1454 k=None CANON totals {'CANON': 649}
+700 R8:7 0 2|0 1|0 r=78 M=1933 k=None CANON totals {'CANON': 698}
+750 R031:1 1|1 0| r=4 M=1668 k=None CANON totals {'CANON': 748}
+800 R8:3|0 1|0 r=96 M=3282 k=None CANON totals {'CANON': 799}
+850 R031:0 4 3^k 2 r=23 M=3411 k=2819 CANON totals {'CANON': 848}
+900 R8:3|0 1|0 r=41 M=1741 k=None CANON totals {'CANON': 899}
+950 R031:1 1|1 0| r=11 M=805 k=None CANON totals {'CANON': 950}
+1000 R8:7 0 2|0 1|0 r=6 M=1791 k=None CANON totals {'CANON': 999}
+1050 R031:0 4 3^k 2 r=29 M=1857 k=2437 CANON totals {'CANON': 1051}
+1100 R031:1 1|1 0| r=3 M=3800 k=None CANON totals {'CANON': 1101}
+1150 R8:3|0 1|0 r=36 M=1052 k=None CANON totals {'CANON': 1149}
+1200 R8:3|0 1|0 r=5 M=2713 k=None CANON totals {'CANON': 1200}
+1250 R031:1 1|1 0| r=30 M=2339 k=None CANON totals {'CANON': 1249}
+1300 R8:3|0 1|0 r=34 M=2784 k=None CANON totals {'CANON': 1300}
+1350 R031:0 4 3^k 2 r=16 M=2053 k=2306 CANON totals {'CANON': 1350}
+1400 R8:7 0 2|0 1|0 r=68 M=3629 k=None CANON totals {'CANON': 1400}
+1450 R8:7 0 2|0 1|0 r=6 M=2004 k=None CANON totals {'CANON': 1450}
+1500 R031:1 1|1 0| r=19 M=3109 k=None CANON totals {'CANON': 1500}
+1550 R8:3|0 1|0 r=71 M=2055 k=None CANON totals {'CANON': 1550}
+1600 R8:3|0 1|0 r=73 M=2785 k=None CANON totals {'CANON': 1598}
+1650 R031:0 4 3^k 2 r=11 M=2301 k=2658 CANON totals {'CANON': 1649}
+1700 R031:1 1|1 0| r=38 M=1816 k=None CANON totals {'CANON': 1699}
+1750 R8:3|0 1|0 r=46 M=1982 k=None CANON totals {'CANON': 1751}
+1800 R8:7 0 2|0 1|0 r=27 M=2485 k=None CANON totals {'CANON': 1800}
+1850 R8:3|0 1|0 r=71 M=3961 k=None CANON totals {'CANON': 1850}
+1900 R8:3|0 1|0 r=72 M=879 k=None CANON totals {'CANON': 1901}
+1950 R8:7 0 2|0 1|0 r=38 M=3504 k=None CANON totals {'CANON': 1949}
+2000 R8:3|0 1|0 r=48 M=2113 k=None CANON totals {'CANON': 2001}
+2050 R031:1 1|1 0| r=30 M=556 k=None CANON totals {'CANON': 2049}
+2100 R8:3|0 1|0 r=20 M=1573 k=None CANON totals {'CANON': 2100}
+2150 R8:3|0 1|0 r=13 M=1074 k=None CANON totals {'CANON': 2151}
+2200 R031:1 1|1 0| r=16 M=3229 k=None CANON totals {'CANON': 2198}
+2250 R031:0 4 3^k 2 r=25 M=2689 k=1609 CANON totals {'CANON': 2265}
+2300 R8:3|0 1|0 r=79 M=2787 k=None CANON totals {'CANON': 2300}
+2350 R031:1 1|1 0| r=12 M=2939 k=None CANON totals {'CANON': 2350}
+2400 R031:1 1|1 0| r=5 M=2184 k=None CANON totals {'CANON': 2399}
+2450 R031:1 1|1 0| r=17 M=2667 k=None CANON totals {'CANON': 2452}
+2500 R8:7 0 2|0 1|0 r=46 M=2321 k=None CANON totals {'CANON': 2512}
+2550 R031:0 4 3^k 2 r=28 M=2453 k=372 CANON totals {'CANON': 2549}
+2600 R031:1 1|1 0| r=2 M=2208 k=None CANON totals {'CANON': 2599}
+2650 R8:3|0 1|0 r=79 M=3814 k=None CANON totals {'CANON': 2649}
+2700 R8:3|0 1|0 r=72 M=2249 k=None CANON totals {'CANON': 2698}
+2750 R8:3|0 1|0 r=98 M=3021 k=None CANON totals {'CANON': 2774}
+2800 R031:1 1|1 0| r=34 M=3882 k=None CANON totals {'CANON': 2798}
+2850 R031:1 1|1 0| r=37 M=1147 k=None CANON totals {'CANON': 2849}
+2900 R8:7 0 2|0 1|0 r=79 M=3865 k=None CANON totals {'CANON': 2899}
+2950 R8:7 0 2|0 1|0 r=2 M=2325 k=None CANON totals {'CANON': 2949}
+3000 R8:3|0 1|0 r=42 M=3809 k=None CANON totals {'CANON': 3001}
+3050 R031:0 4 3^k 2 r=1 M=954 k=657 CANON totals {'CANON': 3049}
+3100 R031:1 1|1 0| r=23 M=3624 k=None CANON totals {'CANON': 3099}
+3150 R031:1 1|1 0| r=35 M=3030 k=None CANON totals {'CANON': 3148}
+3200 R8:7 0 2|0 1|0 r=89 M=543 k=None CANON totals {'CANON': 3199}
+3250 R031:0 4 3^k 2 r=26 M=669 k=1758 CANON totals {'CANON': 3248}
+3300 R031:0 4 3^k 2 r=25 M=3573 k=2026 CANON totals {'CANON': 3298}
+3350 R031:0 4 3^k 2 r=2 M=749 k=243 CANON totals {'CANON': 3348}
+3400 R031:0 4 3^k 2 r=12 M=1018 k=1454 CANON totals {'CANON': 3398}
+3450 R031:0 4 3^k 2 r=8 M=3636 k=2252 CANON totals {'CANON': 3451}
+3500 R8:3|0 1|0 r=84 M=2841 k=None CANON totals {'CANON': 3499}
+3550 R031:0 4 3^k 2 r=14 M=555 k=834 CANON totals {'CANON': 3550}
+3600 R8:7 0 2|0 1|0 r=31 M=1511 k=None CANON totals {'CANON': 3599}
+3650 R8:7 0 2|0 1|0 r=34 M=1879 k=None CANON totals {'CANON': 3653}
+3700 R8:7 0 2|0 1|0 r=57 M=778 k=None CANON totals {'CANON': 3703}
+3750 R031:0 4 3^k 2 r=19 M=645 k=996 CANON totals {'CANON': 3749}
+3800 R8:7 0 2|0 1|0 r=74 M=1155 k=None CANON totals {'CANON': 3802}
+3850 R8:3|0 1|0 r=23 M=2971 k=None CANON totals {'CANON': 3849}
+3900 R8:7 0 2|0 1|0 r=58 M=503 k=None CANON totals {'CANON': 3898}
+3950 R031:1 1|1 0| r=27 M=1876 k=None CANON totals {'CANON': 3951}
+FINAL {'CANON': 4000}
