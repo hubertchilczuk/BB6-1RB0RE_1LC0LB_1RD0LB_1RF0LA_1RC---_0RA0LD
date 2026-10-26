@@ -1,0 +1,16 @@
+progress 2000/30191, mismatches 0
+progress 4000/30191, mismatches 0
+progress 6000/30191, mismatches 0
+progress 8000/30191, mismatches 0
+progress 10000/30191, mismatches 0
+progress 12000/30191, mismatches 0
+progress 14000/30191, mismatches 0
+progress 16000/30191, mismatches 0
+progress 18000/30191, mismatches 0
+progress 20000/30191, mismatches 0
+progress 22000/30191, mismatches 0
+progress 24000/30191, mismatches 0
+progress 26000/30191, mismatches 0
+progress 28000/30191, mismatches 0
+progress 30000/30191, mismatches 0
+ENDPOINT4: 30191 lemmas, 30756 extreme points checked, 0 mismatches
