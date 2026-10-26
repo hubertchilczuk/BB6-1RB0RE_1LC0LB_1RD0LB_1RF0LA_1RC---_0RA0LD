@@ -27,12 +27,22 @@ from math import gcd
 from collections import deque
 
 D = os.path.dirname(os.path.abspath(__file__)) + '/'
-P = json.load(open(D + 'proof2.json'))
+PROOF = os.environ.get('BB6_PROOF', 'proof2.json')
+P = json.load(open(D + PROOF))
 MSTAR = int(sys.argv[1]) if __name__ == '__main__' and len(sys.argv) > 1 else 500
 M0, K0, N0 = 1000, 1000, 300
 nodes = P['nodes']
 errs = []
 stats = dict(classes=0, splits=0, peels=0, exceptional=0, smallM=0, maxdepth=0)
+USED = None     # set to {} to record, per lemma, the most extreme parameter points it is used at
+
+
+def use(sect, key, pt):
+    """record pt (lemma variables v0, v1, v2) if it is the smallest so far in some coordinate"""
+    if USED is None: return
+    cur = USED.setdefault((sect, key), [None, None, None])
+    for i in range(3):
+        if cur[i] is None or (pt[i], sum(pt)) < (cur[i][i], sum(cur[i])): cur[i] = pt
 
 
 class Split(Exception):
@@ -106,13 +116,15 @@ def descent(t, n, m, k, ctx):
     if js >= 0:
         for j in sorted({0, js}):
             Nj = n[0] - j * Pp; Mj = m[0] + j * dM
-            if cons_ok(A['constraints'], [Nj - N0, (Mj - M0 - par) // 2, kv[0]]): continue
+            if cons_ok(A['constraints'], [Nj - N0, (Mj - M0 - par) // 2, kv[0]]):
+                use('lemmaA' if par == 0 else 'lemmaA_odd', anode, (Nj - N0, (Mj - M0 - par) // 2, kv[0])); continue
             if j == 0:
                 # first step with a small concrete M: dedicated lemma (N symbolic, M concrete)
                 if m[1] or m[2]: raise Split(('peel', nz_var(m)))
                 sm = P.get('lemmaA_smallM', {}).get('%s ## M=%d' % (anode, m[0]))
                 if sm and sm['ok'] and cons_ok(sm['constraints'], [n[0] - N0, kv[0], 0]):
                     stats['smallM'] += 1
+                    use('lemmaA_smallM', '%s ## M=%d' % (anode, m[0]), (n[0] - N0, kv[0], 0))
                     return descent(t, (n[0] - Pp,) + n[1:], (m[0] + dM,) + m[1:], k, ctx)
             errs.append(('descent: lemma A constraint', t[:60], Nj, Mj, ctx)); return None
     for j in range(js + 1, T[0]):
@@ -121,6 +133,7 @@ def descent(t, n, m, k, ctx):
         if not s or not s['ok']: errs.append(('descent: small lemma missing', t[:60], Nj, par, ctx)); return None
         if s['Mmin'] > Mj or (s.get('Kmin') is not None and k is not None and s['Kmin'] > k[0]):
             errs.append(('descent: small lemma bound', t[:60], Nj, Mj, ctx)); return None
+        use('smallA', '%s ## N=%d par=%d' % (anode, Nj, par), ((Mj - M0 - par) // 2, kv[0], 0))
     r2 = n[0] - T[0] * Pp
     if not rl <= r2 < rl + Pp: errs.append(('descent: residue out of range', t[:60], r2)); return None
     return r2, (m[0] + T[0] * dM, m[1] + T[1] * dM, m[2] + T[2] * dM)
@@ -188,6 +201,7 @@ def step(S, ctx):
     except ValueError:
         errs.append(('k parity mismatch', t[:60], k, ctx)); return None
     if not cons_ok(B['constraints'], [x[0], y[0], 0]): errs.append(('lemma B constraint', t[:60], r, M, k, ctx)); return None
+    use('lemmaB', '%s ## r=%d par=%d' % (src, r, par), (x[0], y[0], 0))
     for c in (B['N1'], B['M1'], B['K1']):
         if c is not None and (c[1] < 0 or c[2] < 0): errs.append(('negative coefficient', t[:60], r, c)); return None
     n1, m1 = aff_eval(B['N1'], x, y), aff_eval(B['M1'], x, y)

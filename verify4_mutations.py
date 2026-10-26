@@ -3,10 +3,10 @@ import os, sys, json, random, subprocess, re
 
 D = os.path.dirname(os.path.abspath(__file__)) + '/'
 SRC = open(D + 'verify4.py').read()
-HOOK = "P = json.load(open(D + 'proof2.json'))"
+HOOK = "P = json.load(open(D + PROOF))"
 assert HOOK in SRC
 random.seed(1)
-P = json.load(open(D + 'proof2.json'))
+P = json.load(open(D + os.environ.get('BB6_PROOF', 'proof2.json')))
 Bkeys = [k for k, b in P['lemmaB'].items() if b['status'] == 'OK']
 xdep = [k for k in Bkeys if P['lemmaB'][k]['N1'][1] == 1]
 small_keys = list(P['smallA'])
