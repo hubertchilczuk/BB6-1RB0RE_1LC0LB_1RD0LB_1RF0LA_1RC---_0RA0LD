@@ -11,3 +11,11 @@ chain_in.txt
 chain_out.txt
 cc_tmp/
 r4/
+rocq/tmp/
+*.vo
+*.vok
+*.vos
+*.glob
+.*.aux
+rocq/chk.v
+rocq/pilot*

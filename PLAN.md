@@ -28,11 +28,19 @@ i niezależnej recenzji.
 - [x] powiązanie z dowodem komputerowym (`proof4.json`, `verify4`) i baza zaufania
 
 ### 3. Formalizacja w Rocq
-- [ ] zainstalować Rocq/Coq, sklonować busycoq (ccz181078), zbudować i przejrzeć istniejące dowody BB6 (`verify/`)
-- [ ] zapisać maszynę i reguły z kroku 1 jako lematy (shift rules / indukcja po licznikach)
-- [ ] dowód twierdzenia `~ halts tm c0`
-- [ ] jeśli krok 1 nie da zwartego opisu: plan B - certyfikat (lematy z `proof4.json`) + symulator symboliczny
-      zweryfikowany w Rocq
+- [x] środowisko: Docker `coqorg/coq:8.20`, busycoq gałąź BB6 w `D:\bb_tools\busycoq` (framework zbudowany)
+- [ ] decydery busycoq (Inductive) na tej maszynie: domyślne ustawienia - brak decyzji w 10 min; warianty w toku
+- [x] pilotaż: lemat A węzła startowego w Rocq (`rocq/gen_lemmaA.py` -> `rocq/lemmaA_start.v`):
+      `forall n m, cfg0 n m -->+ cfg130 n (m + 1744)`, 130 pod-lematów między punktami kontrolnymi
+      (co 25 przemiatań), każdy przez refleksyjny wykonawca `es'` (ES_v3); kompilacja ~2 min, bez aksjomatów.
+      Lemat zachodzi dla WSZYSTKICH n, m (ograniczenia z ssim były artefaktem) -> lematy small-N / small-M zbędne.
+- [ ] 3a. lemat A dla każdego węzła (205, w tym rodziny z symbolicznym k: trzecia zmienna w `es'`)
+- [ ] 3b. zejście: indukcja `w^(P*j + n) -> w^n`, `M -> M + j*dM` (jeden ogólny lemat)
+- [ ] 3c. reguła konwersji: wszystkie symboliczne akceleracje ssim4 mają jeden wzór (t = c + v0, jedna seria +1,
+      druga -1); udowodnić ją indukcją, potem lematy B (20 122) jako es' między punktami kontrolnymi + ta reguła
+- [ ] 3d. domknięcie: twierdzenie generowane z danych verify4 (przypadki (węzeł, r, parzystość), arytmetyka przez lia)
+- [ ] 3e. start: `c0 -->* konfiguracja startowa` (2,26e8 kroków; zweryfikowany symulator konkretny busycoq)
+- [ ] 3f. złożenie: `~ halts tm c0` przez `progress_nonhalt_cond` z niezmiennikiem „stan w dziedzinie”
 
 ### 4. Odtwarzalność
 - [ ] weryfikator, który potrzebuje tylko plików z repo (bez ~20 GB śladów), albo skrypt odtwarzający wejścia
@@ -47,3 +55,6 @@ i niezależnej recenzji.
 - 2026-10-26: plan zapisany; start kroku 1.
 - 2026-10-26: krok 1 i 2 zrobione (PROOF.md). Brak krótkiego opisu regułowego -> krok 3 idzie wariantem
   z weryfikowanym symulatorem; najpierw sprawdzić, co z busycoq (RWLAcc, Inductive, Compute) da się użyć.
+- 2026-10-26: dysk C: był pełny (prawdopodobna przyczyna crasha) - stara kopia z Temp usunięta.
+  busycoq zbudowany w Dockerze; ES_v3 (refleksyjny wykonawca symboliczny z regułami przesunięcia) wystarcza
+  do lematów A: pierwszy lemat A udowodniony w Rocq.
