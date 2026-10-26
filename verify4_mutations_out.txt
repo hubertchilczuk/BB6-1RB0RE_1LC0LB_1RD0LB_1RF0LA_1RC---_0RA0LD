@@ -1,0 +1,11 @@
+drop a lemma B                                errors=1 start_ok=True -> CAUGHT
+lemma B not crosschecked                      errors=1 start_ok=True -> CAUGHT
+impossible lemma B constraint                 errors=1 start_ok=True -> CAUGHT
+drop all small-N lemmas of one N              errors=4618 start_ok=True -> CAUGHT
+tighter lemma A constraints (all nodes)       errors=919063 start_ok=True -> CAUGHT
+drop odd lemma A                              errors=532125 start_ok=False -> CAUGHT
+drop small-M lemmas                           errors=1326 start_ok=True -> CAUGHT
+M1 drops by a lot (one x-dependent lemma)     errors=40 start_ok=True -> CAUGHT
+odd dM                                        errors=6513 start_ok=False -> CAUGHT
+MSTAR=300 (verify3 had errors here)           errors=35356 start_ok=True
+MSTAR=400 (verify3 had errors here)           errors=6359 start_ok=True
