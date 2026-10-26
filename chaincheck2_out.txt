@@ -1,0 +1,18 @@
+trajectory: start node, N=224, M=2045 (step 226258281 from the blank tape)
+  start descent concretely -> (N, M) = (24, 5533)  [verify4: (24, 5533)]
+  cycle 0: (N=24, M=5533) -> node 1 7 0 0* 4 3 0 0 0 0 0 9 | 8  .. (N=100, M=50027) as predicted
+  cycle 1 from (N=100, M=50027): next configuration exceeds 3000000 cells, stopping
+  random cycles: 250/3000 done, 0 mismatches
+  random cycles: 500/3000 done, 0 mismatches
+  random cycles: 750/3000 done, 0 mismatches
+  random cycles: 1000/3000 done, 0 mismatches
+  random cycles: 1250/3000 done, 0 mismatches
+  random cycles: 1500/3000 done, 0 mismatches
+  random cycles: 1750/3000 done, 0 mismatches
+  random cycles: 2000/3000 done, 0 mismatches
+  random cycles: 2250/3000 done, 0 mismatches
+  random cycles: 2500/3000 done, 0 mismatches
+  random cycles: 2750/3000 done, 0 mismatches
+  random cycles: 3000/3000 done, 0 mismatches
+random cycles: 3000 checked, 3000 ok, 0 skipped (too large), 0 mismatches
+CHAINCHECK2 OK
