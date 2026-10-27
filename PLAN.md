@@ -40,8 +40,11 @@ i niezależnej recenzji.
       lemat dla k >= 1 kopii); sprawdzone kompilacją: węzeł startowy, węzeł `0 3 1` (27 s), pierwszy pod-lemat rodziny.
       Generowanie w toku (75/205), potem kompilacja wszystkich.
 - [ ] 3b. zejście: indukcja `w^(P*j + n) -> w^n`, `M -> M + j*dM` (jeden ogólny lemat)
-- [ ] 3c. reguła konwersji: wszystkie symboliczne akceleracje ssim4 mają jeden wzór (t = c + v0, jedna seria +1,
-      druga -1); udowodnić ją indukcją, potem lematy B (20 122) jako es' między punktami kontrolnymi + ta reguła
+- [ ] 3c. lematy B (20 122): metoda punktów kontrolnych działa także dla konwersji (liczba przemiatań nie zależy
+      od M) - pierwszy lemat B udowodniony (`rocq/gen_lemmaB.py`, `rocq/B/test_B17.v`), bez osobnej indukcji.
+      Problem wydajności: ~20 s na pod-lemat (Ltac + Qed rosną z liczbą konkretnych komórek, tu 15-40 tys.),
+      czyli ~30 min na lemat B. Plan: każda duża seria (także stała) dostaje własną zmienną, pod-lematy
+      `forall z, cfg_i z -->+ cfg_(i+1) (z + delta)` (jak m w lematach A) -> konfiguracje rzędu strefy, ~30 s na lemat B.
 - [ ] 3d. domknięcie: twierdzenie generowane z danych verify4 (przypadki (węzeł, r, parzystość), arytmetyka przez lia)
 - [ ] 3e. start: `c0 -->* konfiguracja startowa` (2,26e8 kroków; zweryfikowany symulator konkretny busycoq)
 - [ ] 3f. złożenie: `~ halts tm c0` przez `progress_nonhalt_cond` z niezmiennikiem „stan w dziedzinie”
