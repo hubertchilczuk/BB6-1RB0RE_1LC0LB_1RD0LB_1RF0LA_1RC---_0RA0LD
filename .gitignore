@@ -19,3 +19,4 @@ rocq/tmp/
 .*.aux
 rocq/chk.v
 rocq/pilot*
+rocq/genA_log*.txt

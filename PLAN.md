@@ -29,12 +29,16 @@ i niezależnej recenzji.
 
 ### 3. Formalizacja w Rocq
 - [x] środowisko: Docker `coqorg/coq:8.20`, busycoq gałąź BB6 w `D:\bb_tools\busycoq` (framework zbudowany)
-- [ ] decydery busycoq (Inductive) na tej maszynie: domyślne ustawienia - brak decyzji w 10 min; warianty w toku
+- [x] decydery busycoq (Inductive) na tej maszynie: domyślne ustawienia i 4 warianty (block-size 20, 10+arithseq,
+      exploop, repeater-len 40) - brak decyzji (>1 h każdy, przerwane)
 - [x] pilotaż: lemat A węzła startowego w Rocq (`rocq/gen_lemmaA.py` -> `rocq/lemmaA_start.v`):
       `forall n m, cfg0 n m -->+ cfg130 n (m + 1744)`, 130 pod-lematów między punktami kontrolnymi
       (co 25 przemiatań), każdy przez refleksyjny wykonawca `es'` (ES_v3); kompilacja ~2 min, bez aksjomatów.
       Lemat zachodzi dla WSZYSTKICH n, m (ograniczenia z ssim były artefaktem) -> lematy small-N / small-M zbędne.
 - [ ] 3a. lemat A dla każdego węzła (205, w tym rodziny z symbolicznym k: trzecia zmienna w `es'`)
+      `rocq/gen_lemmaA_all.py` -> `rocq/A/A_<tag>.v`; rodziny wymagają obrotu bloku k3 (`rocq/rot.json`, obrót 1,
+      lemat dla k >= 1 kopii); sprawdzone kompilacją: węzeł startowy, węzeł `0 3 1` (27 s), pierwszy pod-lemat rodziny.
+      Generowanie w toku (75/205), potem kompilacja wszystkich.
 - [ ] 3b. zejście: indukcja `w^(P*j + n) -> w^n`, `M -> M + j*dM` (jeden ogólny lemat)
 - [ ] 3c. reguła konwersji: wszystkie symboliczne akceleracje ssim4 mają jeden wzór (t = c + v0, jedna seria +1,
       druga -1); udowodnić ją indukcją, potem lematy B (20 122) jako es' między punktami kontrolnymi + ta reguła
@@ -58,3 +62,7 @@ i niezależnej recenzji.
 - 2026-10-26: dysk C: był pełny (prawdopodobna przyczyna crasha) - stara kopia z Temp usunięta.
   busycoq zbudowany w Dockerze; ES_v3 (refleksyjny wykonawca symboliczny z regułami przesunięcia) wystarcza
   do lematów A: pierwszy lemat A udowodniony w Rocq.
+- 2026-10-27: generator lematów A dla wszystkich węzłów. Pomysł na lematy B: es' (chk_sr) szuka reguł przesunięcia
+  z kontekstem, więc konwersja może nie wymagać osobnej indukcji, jeśli liczba przemiatań nie zależy od M -
+  `rocq/probe_lemmaB.py` to sprawdza (pierwsze uruchomienie przerwane przez brak pamięci; do powtórzenia z
+  mniejszym limitem zdarzeń). Uwaga na pamięć: Docker (8 GB) + 6 procesów generatora naraz to za dużo.

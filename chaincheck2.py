@@ -26,17 +26,9 @@ NCYCLES = int(sys.argv[1]) if len(sys.argv) > 1 else 3000
 lock = threading.Lock()
 
 # samples (structure templates) of all nodes: lemma-B target files, the start config, family members
-START_FILE = D + 's_226258280.txt'
-st, ck, fk = P2.classify(START_FILE, '1 7 0 0* 4 3 0 0 0 0 0 9 | 8 ')
-P2.samples[ck] = st
-for rec in P2.proof['lemmaB'].values():
-    for t, fn in rec.get('targets_files', {}).items():
-        if t not in P2.samples:
-            P2.samples[t] = P2.classify(fn, t.split(' || ')[0])[0]
-for t in list(P2.samples):
-    if not P2.is_family(t) and P2.samples[t]['k'] is not None:
-        f = P2.family_of(t)
-        if f not in P2.samples: P2.samples[f] = P2.samples[t]
+import samples
+samples.load()
+START_FILE = samples.START_FILE
 
 
 def cells(t, N, M, k):
