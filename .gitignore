@@ -20,3 +20,7 @@ rocq/tmp/
 rocq/chk.v
 rocq/pilot*
 rocq/genA_log*.txt
+rocq/B/*.v
+!rocq/B/test_B17.v
+rocq/A/*.v
+rocq/probeB_out.txt

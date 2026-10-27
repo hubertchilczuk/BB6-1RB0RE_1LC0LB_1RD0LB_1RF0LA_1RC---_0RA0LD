@@ -12,17 +12,17 @@ import prover2 as P2
 
 S = samples.load()
 P = json.load(open(ROOT + 'proof4.json'))
-EVT = ROOT + 'an/evtapes.exe'
+EVT = ROOT + 'an/evtapes2.exe'
 TMP = ROOT + 'rocq/tmp/'
 
 
 def events_until(cfgtape, target):
-    fn = TMP + 'probe_%d.txt' % os.getpid()
+    """number of sweeps until the tape equals target (evtapes compares in C, nothing per event is printed)"""
+    fn, tf = TMP + 'probe_%d.txt' % os.getpid(), TMP + 'probe_%d_t.txt' % os.getpid()
     open(fn, 'w').write('0 2 0\n%s\n' % cfgtape)
-    out = subprocess.run([EVT, fn, '20000000000', '2000000'], capture_output=True, text=True).stdout.split('\n')
-    for i in range(0, len(out) - 1, 2):
-        if out[i + 1] == target: return i // 2 + 1
-    return None
+    open(tf, 'w').write(target + '\n')
+    out = subprocess.run([EVT, fn, '200000000000', '2000000', tf], capture_output=True, text=True).stdout.split()
+    return int(out[1]) if out and out[0] == 'REACHED' else None
 
 
 def tape(st, N, M, k=None):
