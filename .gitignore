@@ -27,3 +27,6 @@ rocq/probeB_out.txt
 samples_cache.json
 rocq/B/time2.txt
 rocq/B/slice*.v
+rocq/A2/*.v
+rocq/N/Nodes.v
+rocq/N/nodes.json
