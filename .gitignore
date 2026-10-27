@@ -34,3 +34,10 @@ rocq/D/*.v
 rocq/B3/
 rocq/gen_*.log
 rocq/tmpc/
+rocq/S/probe*
+rocq/S/chk.v
+rocq/F/F.v
+rocq/F/Dom.v
+rocq/F/dom.json
+rocq/C/
+rocq/reach.json
