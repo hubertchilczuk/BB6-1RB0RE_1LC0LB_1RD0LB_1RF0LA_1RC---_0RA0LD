@@ -8,11 +8,13 @@ cd "$DIR" || exit 1
 one() {
   f=$1
   if [ -e "${f%.v}.vo" ] && [ "${f%.v}.vo" -nt "$f" ]; then return; fi
+  if [ -e "${f%.v}.fail" ] && [ "${f%.v}.fail" -nt "$f" ]; then return; fi   # failed already: retried once the .v changes
   s=$(date +%s)
   q=(); for d in $QEMPTY; do q+=(-Q "$d" ""); done
-  if out=$(timeout 7200 coqc -Q /bc/verify BusyCoq -Q /r/N BB6N -Q /r/F BB6F $EXTRA "${q[@]}" "$f" 2>&1); then
+  if out=$(timeout ${TLIM:-1500} coqc -Q /bc/verify BusyCoq -Q /r/N BB6N -Q /r/F BB6F $EXTRA "${q[@]}" "$f" 2>&1); then
     echo "OK $f $(( $(date +%s) - s ))" >> compile_log.txt
   else
+    touch "${f%.v}.fail"
     echo "FAIL $f $(( $(date +%s) - s )) $(echo "$out" | grep -m1 -E 'Error|Killed|line [0-9]+')" >> compile_log.txt
   fi
 }

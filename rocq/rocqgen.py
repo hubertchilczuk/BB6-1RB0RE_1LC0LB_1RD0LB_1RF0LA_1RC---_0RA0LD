@@ -29,6 +29,8 @@ MINRUN = 6
 BIGV = 100      # concrete runs with at least this many cells are variable runs
 UNIT = 20       # cells of a unit block
 SAFE = 2        # extra margin copies
+DMAX = 2000     # largest length change in cells of a matched constant run (xmatch)
+GROWMIN = 20   # constant runs whose length changes in a step are generalized from this many units on
 CHUNK = 40      # literals longer than this get a shared name
 
 
@@ -135,9 +137,10 @@ def canon(pieces, varmask):
 
 
 # ---------------------------------------------------------------- lineages
-def match(prev, pmask, cur, cmask):
+def match(prev, pmask, cur, cmask, xmatch=False):
     """order-preserving matching of variable runs of consecutive checkpoints (same slope in cells; constant runs
-    only with the same block)"""
+    only with the same block). xmatch: constant runs match only when their length changes by at most DMAX cells,
+    then also across blocks (a converted run, as in lemma B with a fixed M)"""
     pv = [i for i in range(len(prev)) if pmask[i]]
     cv = [i for i in range(len(cur)) if cmask[i]]
     res, k = {}, 0
@@ -145,7 +148,9 @@ def match(prev, pmask, cur, cmask):
         cj, aj, fj = cur[j]
         for t in range(k, len(pv)):
             ci, ai, fi = prev[pv[t]]
-            if tuple(len(ci) * x for x in fi) == tuple(len(cj) * x for x in fj) and (any(fi) or ci == cj):
+            if xmatch and not any(fi): ok = not any(fj) and abs(len(cj) * aj - len(ci) * ai) <= DMAX
+            else: ok = any(fi) or ci == cj
+            if tuple(len(ci) * x for x in fi) == tuple(len(cj) * x for x in fj) and ok:
                 res[j] = pv[t]; k = t + 1; break
     return res
 
@@ -217,7 +222,7 @@ HEADER = ['From BusyCoq Require Import Individual62 ES_v3.', 'Require Import Lia
           'Proof. intros -> H ->. exact H. Qed.', '']
 
 
-def chain(cps, masks, pnames, theorem, names, ends=None, extra_unfold=()):
+def chain(cps, masks, pnames, theorem, names, ends=None, extra_unfold=(), xmatch=False):
     """cps[i]: pieces of checkpoint i (affine in pnames), masks[i]: variable runs. Returns Rocq lines: checkpoint
     definitions, sub-lemmas, and the theorem  theorem : cfg0 (values) -->+ cfg_last (values).
     ends = {i: name}: checkpoint i is the external definition `name` (a node form, arguments in tape order)."""
@@ -227,7 +232,7 @@ def chain(cps, masks, pnames, theorem, names, ends=None, extra_unfold=()):
     can = [canon(cps[i], masks[i]) for i in range(n)]
     lin = [dict() for _ in range(n)]; nl = 0
     for i in range(n):
-        m = match(cps[i - 1], masks[i - 1], cps[i], masks[i]) if i else {}
+        m = match(cps[i - 1], masks[i - 1], cps[i], masks[i], xmatch) if i else {}
         for j in range(len(cps[i])):
             if not masks[i][j]: continue
             if j in m: lin[i][j] = lin[i - 1][m[j]]
@@ -244,6 +249,9 @@ def chain(cps, masks, pnames, theorem, names, ends=None, extra_unfold=()):
     steps = []
     for i in range(n - 1):
         common = [l for l in vl[i] if l in vals[i + 1]]
+        # a short constant run whose length changes is not generalized: the step need not hold for other lengths
+        # (es' then runs without end instead of failing); long ones must be, or the concrete tape gets too big
+        common = [l for l in common if any(vals[i][l][1]) or vals[i][l][0] == vals[i + 1][l][0] or vals[i][l][0] >= GROWMIN]
         aL, aR, mg = {}, {}, {}
         for l in vl[i]:
             c0, f0 = vals[i][l]
