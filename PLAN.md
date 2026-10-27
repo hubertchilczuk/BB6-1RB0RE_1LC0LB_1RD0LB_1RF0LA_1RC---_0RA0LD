@@ -42,9 +42,13 @@ i niezależnej recenzji.
 - [ ] 3b. zejście: indukcja `w^(P*j + n) -> w^n`, `M -> M + j*dM` (jeden ogólny lemat)
 - [ ] 3c. lematy B (20 122): metoda punktów kontrolnych działa także dla konwersji (liczba przemiatań nie zależy
       od M) - pierwszy lemat B udowodniony (`rocq/gen_lemmaB.py`, `rocq/B/test_B17.v`), bez osobnej indukcji.
-      Problem wydajności: ~20 s na pod-lemat (Ltac + Qed rosną z liczbą konkretnych komórek, tu 15-40 tys.),
-      czyli ~30 min na lemat B. Plan: każda duża seria (także stała) dostaje własną zmienną, pod-lematy
-      `forall z, cfg_i z -->+ cfg_(i+1) (z + delta)` (jak m w lematach A) -> konfiguracje rzędu strefy, ~30 s na lemat B.
+      Problem wydajności rozwiązany w `rocq/gen_lemmaB2.py`: każda duża seria (także stała) ma własną zmienną,
+      pod-lematy `forall z, cfg_i (z+m) -->+ cfg_(i+1) (z+m+d)`, złożenie przez `f_equal; lia`.
+      Testowy lemat B: 2 h -> 29 s (punkty kontrolne co 200 przemiatań), generowanie 3 s.
+      Szacunek: ~20 tys. lematów B ~ 160 h CPU (2-3 doby przy 2-3 procesach; więcej nie pozwala RAM).
+- [ ] 3c'. wspólne postaci konfiguracji węzłów dla lematów A i B (ta sama kanoniczna postać serii; zmiana
+      jednostki u -> (uu) i obroty bloków przez ogólne lematy o lpow) - potrzebne do złożenia A i B
+- [ ] 3c''. lematy B dla 4 rodzin (k symboliczne: wnioskowanie afiniczne w (x, y))
 - [ ] 3d. domknięcie: twierdzenie generowane z danych verify4 (przypadki (węzeł, r, parzystość), arytmetyka przez lia)
 - [ ] 3e. start: `c0 -->* konfiguracja startowa` (2,26e8 kroków; zweryfikowany symulator konkretny busycoq)
 - [ ] 3f. złożenie: `~ halts tm c0` przez `progress_nonhalt_cond` z niezmiennikiem „stan w dziedzinie”

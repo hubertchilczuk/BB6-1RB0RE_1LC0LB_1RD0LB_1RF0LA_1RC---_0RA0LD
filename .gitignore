@@ -24,3 +24,6 @@ rocq/B/*.v
 !rocq/B/test_B17.v
 rocq/A/*.v
 rocq/probeB_out.txt
+samples_cache.json
+rocq/B/time2.txt
+rocq/B/slice*.v
