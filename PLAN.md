@@ -46,7 +46,16 @@ i niezależnej recenzji.
       pod-lematy `forall z, cfg_i (z+m) -->+ cfg_(i+1) (z+m+d)`, złożenie przez `f_equal; lia`.
       Testowy lemat B: 2 h -> 29 s (punkty kontrolne co 200 przemiatań), generowanie 3 s.
       Szacunek: ~20 tys. lematów B ~ 160 h CPU (2-3 doby przy 2-3 procesach; więcej nie pozwala RAM).
-- [ ] 3c'. wspólne postaci konfiguracji węzłów dla lematów A i B (ta sama kanoniczna postać serii; zmiana
+- [x] 3c'. (zrobione: rocqgen.py, nodeform.py, N/Nodes.v, genA2.py, genB3.py; lematy A i B zaczynają/kończą się
+      w stałych off_<tag>_<par>). Stan 2026-10-27: 410 lematów A wygenerowanych, kompilacja w toku (rocq/A2,
+      compile_log.txt); lematy B generowane w 3 procesach (run_gen.py B k 3, logi rocq/gen_B_*.log),
+      kompilacja potem: `bash compile.sh /r/B3 3` w kontenerze (~47 h). Zejście: rocq/genD.py (D_<tag>_<par>.v,
+      indukcja po lematach A) - wygenerowane testowo, do skompilowania po A2 (flagi: -Q /r/A2 "").
+      Dalej: domknięcie (Dom.v: predykat dziedziny z konstruktorami per węzeł/parzystość; per (węzeł, r, par)
+      lemat B + zejście z div/mod przez lia; 2 wyjątkowe lądowania osobno), start (2,26e8 kroków - potrzebny
+      szybki zweryfikowany symulator konkretny z paliwem N, wzór: CubicMess.v steps''/N_iter_until),
+      na końcu progress_nonhalt_cond.
+- [ ] 3c' (opis pierwotny). wspólne postaci konfiguracji węzłów dla lematów A i B (ta sama kanoniczna postać serii; zmiana
       jednostki u -> (uu) i obroty bloków przez ogólne lematy o lpow) - potrzebne do złożenia A i B
 - [ ] 3c''. lematy B dla 4 rodzin (k symboliczne: wnioskowanie afiniczne w (x, y))
 - [ ] 3d. domknięcie: twierdzenie generowane z danych verify4 (przypadki (węzeł, r, parzystość), arytmetyka przez lia)

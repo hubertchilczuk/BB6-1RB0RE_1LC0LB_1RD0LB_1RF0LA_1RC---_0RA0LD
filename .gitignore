@@ -30,3 +30,7 @@ rocq/B/slice*.v
 rocq/A2/*.v
 rocq/N/Nodes.v
 rocq/N/nodes.json
+rocq/D/*.v
+rocq/B3/
+rocq/gen_*.log
+rocq/tmpc/

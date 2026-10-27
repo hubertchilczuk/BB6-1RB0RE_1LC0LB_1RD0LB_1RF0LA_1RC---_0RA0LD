@@ -24,7 +24,8 @@ class Node:
         self.key = key; self.tag = tagof(key)
         st = S[key]
         self.family_key = ' || FAM ' in key
-        self.fam = st.get('k') is not None
+        # k-structure with a variable k-run: families, and nodes with k >= 8 (shorter runs are not compressed)
+        self.fam = st.get('k') is not None and (self.family_key or st['k'] >= 8)
         self.Z, self.w, self.u = st['zone_cells'], st['w_cells'], st['u_cells']
         self.tail = st['tail_cells'].rstrip('0')
         if self.fam:

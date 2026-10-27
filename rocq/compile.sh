@@ -8,7 +8,7 @@ one() {
   f=$1
   if [ -e "${f%.v}.vo" ] && [ "${f%.v}.vo" -nt "$f" ]; then return; fi
   s=$(date +%s)
-  if out=$(timeout 7200 coqc -Q /bc/verify BusyCoq "$f" 2>&1); then
+  if out=$(timeout 7200 coqc -Q /bc/verify BusyCoq -Q /r/N BB6N "$f" 2>&1); then
     echo "OK $f $(( $(date +%s) - s ))" >> compile_log.txt
   else
     echo "FAIL $f $(( $(date +%s) - s )) $(echo "$out" | grep -m1 -E 'Error|Killed|line [0-9]+')" >> compile_log.txt

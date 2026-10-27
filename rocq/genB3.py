@@ -38,6 +38,10 @@ def generate(bkey, outfile, G=200, start=None):
         park = int(node.key.split('park=')[1][0])
         kf = NF.P['nodes'][node.key]['K_fam']
         Kd = kf + ((park - kf) % 2)
+        # partial nodes of this family use this record for their states outside concrete_states: cover their k too
+        for pk, pi in NF.P['nodes'].items():
+            if pi.get('partial_of') == node.key and [r, par] not in pi.get('concrete_states', []):
+                Kd = min(Kd, pi['k'])
         design = [(50, 0), (100, 0), (50, 3), (150, 6)]
         pnames = ('x', 'y')
     else:
