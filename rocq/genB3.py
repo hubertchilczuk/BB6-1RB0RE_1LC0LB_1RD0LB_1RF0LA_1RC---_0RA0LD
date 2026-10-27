@@ -24,12 +24,13 @@ MSTAR = 500
 M0_, K0_ = 1000, 1000     # base values of the proof's lemma variables: x' = (M - M0_ - par)/2, y' = (k - K0_ - park)/2
 
 
-def generate(bkey, outfile, G=200, start=None):
-    """start: a partial node (concrete k) that uses the family's lemma-B record bkey"""
+def generate(bkey, outfile, G=200, start=None, Mfix=None, Kmin=None):
+    """start: a partial node (concrete k) that uses the family's lemma-B record bkey.
+    Mfix, Kmin: exceptional family state with the fixed M = Mfix and k = Kmin + 2y (parameter y only)"""
     node = NF.Node(start or bkey.split(' ## ')[0])
     r = int(bkey.split('r=')[1].split()[0]); par = int(bkey.split('par=')[1])
     B = NF.P['lemmaB'][bkey]; tgt = NF.Node(B['target'])
-    M0 = MSTAR + ((par - MSTAR) % 2)
+    M0 = MSTAR + ((par - MSTAR) % 2) if Mfix is None else Mfix
     yfix = 0
     if start:
         fam = bkey.split(' ## ')[0]
@@ -44,6 +45,10 @@ def generate(bkey, outfile, G=200, start=None):
                 Kd = min(Kd, pi['k'])
         design = [(50, 0), (100, 0), (50, 3), (150, 6)]
         pnames = ('x', 'y')
+        if Mfix is not None:
+            Kd = Kmin
+            design = [(0, 0), (0, 3), (0, 6)]
+            pnames = ('y',)
     else:
         park, Kd = 0, None
         design = [(50,), (100,), (150,)]
@@ -62,7 +67,8 @@ def generate(bkey, outfile, G=200, start=None):
         runs.append(RG.run_to(start, end, G))
     if len({len(c) for c in runs}) != 1: raise ValueError('checkpoint counts differ')
     if any(c[-1] != e for c, e in zip(runs, ends)): raise RuntimeError('last checkpoint is not the target')
-    cps = [RG.family(starts, design)] + [RG.family([c[i] for c in runs], design) for i in range(len(runs[0]))]
+    fdesign = [(row[1],) for row in design] if Mfix is not None else design     # parameters of the lemma
+    cps = [RG.family(starts, fdesign)] + [RG.family([c[i] for c in runs], fdesign) for i in range(len(runs[0]))]
     par1 = B['M1'][0] % 2        # parity of M1 (its x and y coefficients are even)
     masks = [node.check_skeleton(cps[0], par)] + [[RG.is_var(p) for p in c] for c in cps[1:-1]] + [tgt.check_skeleton(cps[-1], par1)]
     same_form(cps[0], masks[0], node, par); same_form(cps[-1], masks[-1], tgt, par1)

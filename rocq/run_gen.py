@@ -21,7 +21,8 @@ def jobs_B():
     nodes = NF.P['nodes']
     for bkey in sorted(NF.P['lemmaB']):
         node, rest = bkey.split(' ## ')
-        yield ('B', bkey), ROOT + 'B3/B_%s_%s.v' % (NF.tagof(node), rest.replace('r=', 'r').replace(' par=', '_'))
+        r = int(rest.split('r=')[1].split()[0]); par = int(rest.split('par=')[1])
+        yield ('B', bkey), ROOT + 'B3/B_%s_r%d_%d.v' % (NF.tagof(node), r, par)
 
 
 def main():
