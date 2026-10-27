@@ -176,7 +176,7 @@ def case(name, t, par, r, kind, yinfo, exc_src=None):
 
 
 HEAD = ['From BusyCoq Require Import Individual62.', 'From BB6N Require Import Nodes.', 'From BB6F Require Import F Dom.',
-        'Require Import Lia.']
+        'Require Import Lia Arith.']
 
 
 def wrap(title, body, reqs):
