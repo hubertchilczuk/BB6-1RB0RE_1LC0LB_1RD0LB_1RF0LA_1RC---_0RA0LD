@@ -171,6 +171,15 @@ def run_to(tape, target, every):
     return cps
 
 
+def reaches(tape, target, maxev):
+    """the machine started on tape (state C, head at its left end) reaches target within maxev events"""
+    fn, tf = TMP + 'rc_%d.txt' % os.getpid(), TMP + 'rc_%d_t.txt' % os.getpid()
+    open(fn, 'w').write('0 2 0\n%s\n' % tape)
+    open(tf, 'w').write(target + '\n')
+    out = subprocess.run([EVT, fn, '200000000000', str(maxev), tf], capture_output=True, text=True).stdout
+    return 'REACHED' in out and 'NOT REACHED' not in out
+
+
 # ---------------------------------------------------------------- Rocq text
 def lit(cells):
     return '[' + ';'.join(cells) + ']'
@@ -222,7 +231,7 @@ HEADER = ['From BusyCoq Require Import Individual62 ES_v3.', 'Require Import Lia
           'Proof. intros -> H ->. exact H. Qed.', '']
 
 
-def chain(cps, masks, pnames, theorem, names, ends=None, extra_unfold=(), xmatch=False):
+def chain(cps, masks, pnames, theorem, names, ends=None, extra_unfold=(), xmatch=False, gencheck=None):
     """cps[i]: pieces of checkpoint i (affine in pnames), masks[i]: variable runs. Returns Rocq lines: checkpoint
     definitions, sub-lemmas, and the theorem  theorem : cfg0 (values) -->+ cfg_last (values).
     ends = {i: name}: checkpoint i is the external definition `name` (a node form, arguments in tape order)."""
@@ -240,6 +249,7 @@ def chain(cps, masks, pnames, theorem, names, ends=None, extra_unfold=(), xmatch
     toks = [[(t[0], lin[i][t[1]], t[2]) if t[0] == 'var' else t for t in can[i][0]] for i in range(n)]
     vals = [{lin[i][j]: v for j, v in can[i][1].items()} for i in range(n)]
     vl = [[t[1] for t in toks[i] if t[0] == 'var'] for i in range(n)]     # tape order
+    inv = [{l: j for j, l in lin[i].items()} for i in range(n)]
     out = []
     for i in range(n):
         if i in ends: continue
@@ -251,7 +261,10 @@ def chain(cps, masks, pnames, theorem, names, ends=None, extra_unfold=(), xmatch
         common = [l for l in vl[i] if l in vals[i + 1]]
         # a short constant run whose length changes is not generalized: the step need not hold for other lengths
         # (es' then runs without end instead of failing); long ones must be, or the concrete tape gets too big
-        common = [l for l in common if any(vals[i][l][1]) or vals[i][l][0] == vals[i + 1][l][0] or vals[i][l][0] >= GROWMIN]
+        # gencheck(i, j, j1): the step from checkpoint i also holds with the constant run (piece j of cps[i], piece j1
+        # of cps[i + 1]) longer (a numerical test; a run that fails it stays concrete)
+        common = [l for l in common if any(vals[i][l][1]) or vals[i][l][0] == vals[i + 1][l][0] or
+                  (vals[i][l][0] >= GROWMIN and (gencheck is None or gencheck(i, inv[i][l], inv[i + 1][l])))]
         aL, aR, mg = {}, {}, {}
         for l in vl[i]:
             c0, f0 = vals[i][l]
