@@ -24,9 +24,10 @@ MSTAR = 500
 M0_, K0_ = 1000, 1000     # base values of the proof's lemma variables: x' = (M - M0_ - par)/2, y' = (k - K0_ - park)/2
 
 
-def generate(bkey, outfile, G=200, start=None, Mfix=None, Kmin=None):
+def generate(bkey, outfile, G=200, start=None, Mfix=None, Kmin=None, strict=0):
     """start: a partial node (concrete k) that uses the family's lemma-B record bkey.
-    Mfix, Kmin: exceptional family state with the fixed M = Mfix and k = Kmin + 2y (parameter y only)"""
+    Mfix, Kmin: exceptional family state with the fixed M = Mfix and k = Kmin + 2y (parameter y only)
+    strict: constant runs shorter than this many blocks stay concrete (for files whose es' run hangs)"""
     node = NF.Node(start or bkey.split(' ## ')[0])
     r = int(bkey.split('r=')[1].split()[0]); par = int(bkey.split('par=')[1])
     B = NF.P['lemmaB'][bkey]; tgt = NF.Node(B['target'])
@@ -78,6 +79,8 @@ def generate(bkey, outfile, G=200, start=None, Mfix=None, Kmin=None):
 
     def gencheck(i, j, j1, cells=5 * RG.UNIT):
         if cells % len(cps[i][j][0]) or cells % len(cps[i + 1][j1][0]): return False
+        if cps[i][j][1] < strict: return False
+        if len(cps[i][j][0]) * cps[i][j][1] == len(cps[i + 1][j1][0]) * cps[i + 1][j1][1]: return True     # unchanged length
         return RG.reaches(tape_at(cps[i], j, cells), tape_at(cps[i + 1], j1, cells), G + 1)
 
     names = RG.Names()

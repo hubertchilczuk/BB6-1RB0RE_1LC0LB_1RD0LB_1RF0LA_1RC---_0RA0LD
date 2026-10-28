@@ -263,8 +263,10 @@ def chain(cps, masks, pnames, theorem, names, ends=None, extra_unfold=(), xmatch
         # (es' then runs without end instead of failing); long ones must be, or the concrete tape gets too big
         # gencheck(i, j, j1): the step from checkpoint i also holds with the constant run (piece j of cps[i], piece j1
         # of cps[i + 1]) longer (a numerical test; a run that fails it stays concrete)
-        common = [l for l in common if any(vals[i][l][1]) or vals[i][l][0] == vals[i + 1][l][0] or
-                  (vals[i][l][0] >= GROWMIN and (gencheck is None or gencheck(i, inv[i][l], inv[i + 1][l])))]
+        # (gencheck also sees runs of unchanged length; it may accept them without a test)
+        common = [l for l in common if any(vals[i][l][1]) or
+                  ((vals[i][l][0] == vals[i + 1][l][0] or vals[i][l][0] >= GROWMIN) and
+                   (gencheck is None or gencheck(i, inv[i][l], inv[i + 1][l])))]
         aL, aR, mg = {}, {}, {}
         for l in vl[i]:
             c0, f0 = vals[i][l]
