@@ -3,11 +3,33 @@
 usage: run_gen.py A [slice k of n]      lemma A for every lemma-A node and both parities -> rocq/A2/A_<tag>_<par>.v
        run_gen.py B [slice k of n]      lemma B jobs (see jobs_B) -> rocq/B3/B_<tag>_r<r>_<par>.v
 """
-import os, sys, json, time
+import os, sys, json, time, ctypes   # ctypes before rocqgen: it puts ROOT (with its own struct.py) on sys.path
 import rocqgen as RG
 import nodeform as NF
 
 ROOT = RG.ROOT + 'rocq/'
+MINPHYS, MINCOMMIT = 2 << 30, 4 << 30   # free RAM and free commit (RAM + page file) needed to start a job
+
+
+def memfree():
+    """(free physical memory, free commit) in bytes (Windows GlobalMemoryStatusEx)"""
+    class MS(ctypes.Structure):
+        _fields_ = [('len', ctypes.c_ulong), ('load', ctypes.c_ulong)] + \
+                   [(f, ctypes.c_ulonglong) for f in ('tphys', 'aphys', 'tpage', 'apage', 'tvirt', 'avirt', 'aext')]
+    m = MS(); m.len = ctypes.sizeof(MS)
+    ctypes.windll.kernel32.GlobalMemoryStatusEx(ctypes.byref(m))
+    return m.aphys, m.apage
+
+
+def wait_memory(log):
+    """block while the machine is short of memory instead of failing jobs (or taking Windows down with it)"""
+    told = False
+    while True:
+        ph, cm = memfree()
+        if ph >= MINPHYS and cm >= MINCOMMIT: return
+        if not told: log.write('WAIT memory: %.1f GB RAM, %.1f GB commit free\n' % (ph / 2**30, cm / 2**30)); log.flush()
+        told = True
+        time.sleep(30)
 
 
 def jobs_A():
@@ -34,6 +56,7 @@ def main():
     for job, out in jobs:
         if os.path.exists(out): continue
         os.makedirs(os.path.dirname(out), exist_ok=True)
+        wait_memory(log)
         t = time.time()
         try:
             if job[0] == 'A': c = genA2.generate(job[1], job[2], out)

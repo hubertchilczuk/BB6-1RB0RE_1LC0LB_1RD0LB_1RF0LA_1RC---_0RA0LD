@@ -156,12 +156,27 @@ def match(prev, pmask, cur, cmask, xmatch=False):
 
 
 # ---------------------------------------------------------------- simulation
+MAXOUT = int(os.environ.get('RG_MAXOUT', 1 << 30))   # bytes of checkpoint output before run_to gives up
+
+
 def run_to(tape, target, every):
+    """checkpoints every `every` events until target; the output goes to a file on D: (not a pipe into RAM) and the
+    simulator is killed once it exceeds MAXOUT bytes (the 2026-10-28 crash was Windows running out of memory)"""
     fn, tf = TMP + 'rg_%d.txt' % os.getpid(), TMP + 'rg_%d_t.txt' % os.getpid()
+    of = TMP + 'rg_%d_o.txt' % os.getpid()
     open(fn, 'w').write('0 2 0\n%s\n' % tape)
     open(tf, 'w').write(target + '\n')
-    out = subprocess.run([EVT, fn, '200000000000', '20000000', tf], capture_output=True, text=True,
-                         env=dict(os.environ, EVERY=str(every))).stdout.split('\n')
+    with open(of, 'w') as o:
+        p = subprocess.Popen([EVT, fn, '200000000000', '20000000', tf], stdout=o, stderr=subprocess.DEVNULL,
+                             env=dict(os.environ, EVERY=str(every)))
+        while True:
+            try: p.wait(1); break
+            except subprocess.TimeoutExpired:
+                if os.path.getsize(of) > MAXOUT:
+                    p.kill(); p.wait()
+                    raise RuntimeError('checkpoint output over %d bytes' % MAXOUT)
+    if os.path.getsize(of) > MAXOUT: raise RuntimeError('checkpoint output over %d bytes' % MAXOUT)
+    out = open(of).read().split('\n')
     if not any(l.startswith('REACHED') for l in out): raise RuntimeError('target not reached')
     cps = []
     for i in range(0, len(out) - 1, 2):
