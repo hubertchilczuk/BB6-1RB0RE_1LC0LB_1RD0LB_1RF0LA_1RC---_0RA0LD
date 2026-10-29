@@ -5,6 +5,7 @@
 #   compile.sh DIR [JOBS]        extra coqc flags in EXTRA; QEMPTY="dir1 dir2" maps directories to the empty prefix
 DIR=$1; JOBS=${2:-3}
 cd "$DIR" || exit 1
+ulimit -s unlimited   # es' on long lemma B files overflows the default 8 MB stack
 one() {
   f=$1
   if [ -e "${f%.v}.vo" ] && [ "${f%.v}.vo" -nt "$f" ]; then return; fi
