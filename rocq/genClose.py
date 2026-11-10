@@ -152,7 +152,9 @@ def case(name, t, par, r, kind, yinfo, exc_src=None):
     alias = lambda a, b, p: '' if a == b else 'rewrite (alias_%s_%d); ' % (NF.tagof(a), p)
     desc = 'apply (D_%s_%d.F_%s_%d_descent q (12 + rr) %s%s); lia.' % (TAn.tag, par1, TAn.tag, par1, h1e, yarg)
     if TD != TA:
-        desc = 'replace (%s) with (%s) by (unfold F_%s_%d, F_%s_%d; %sf_equal; lia). %s' % (
+        # symmetry: the goal is F_TA .. = F_TD ..; off_TA and off_TD are convertible, so rewriting with alias_TD
+        # in that orientation can hit the off_TA side first, change nothing and fail
+        desc = 'replace (%s) with (%s) by (unfold F_%s_%d, F_%s_%d; symmetry; %sf_equal; lia). %s' % (
             fin_D, fin_A, TDn.tag, par1, TAn.tag, par1, alias(TD, TA, par1), desc)
     params = ('' if exc_src else ' h') + (' y' if kind == 'family' else '')
     hyps = ([] if exc_src else ['%d <= h' % HMIN]) + (['%d <= y' % yinfo] if kind == 'family' else [])
@@ -218,6 +220,12 @@ def exc_file(e):
     return wrap('closure of the exceptional state ' + e['ctor'], v, {b, d})
 
 
+def write_if_changed(path, text):
+    """keep the mtime of unchanged files, so compile.sh does not redo their .vo"""
+    if os.path.exists(path) and open(path).read() == text: return
+    open(path, 'w').write(text)
+
+
 if __name__ == '__main__':
     args = sys.argv[1:]
     if args and args[0] == '--dry': DRY = True; args = args[1:]
@@ -230,12 +238,12 @@ if __name__ == '__main__':
         if fails:
             bad += 1; print('FAIL', c, len(fails), fails[:2])
             continue
-        if text: open(OUT + 'Close_%s.v' % c[4:], 'w').write('\n'.join(text) + '\n')
+        if text: write_if_changed(OUT + 'Close_%s.v' % c[4:], '\n'.join(text) + '\n')
     for e in EXC.values():
         if e['ctor'] in names or not args:
             try:
                 text = exc_file(e)
-                if text: open(OUT + 'Close_%s.v' % e['ctor'], 'w').write('\n'.join(text) + '\n')
+                if text: write_if_changed(OUT + 'Close_%s.v' % e['ctor'], '\n'.join(text) + '\n')
             except Exception as ex:
                 bad += 1; print('FAIL', e['ctor'], repr(ex))
     print('constructors %d (+%d exceptional), failed %d' % (len(names), len(EXC), bad))
