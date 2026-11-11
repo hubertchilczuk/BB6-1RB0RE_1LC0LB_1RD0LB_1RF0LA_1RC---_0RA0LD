@@ -16,7 +16,9 @@ one() {
     echo "OK $f $(( $(date +%s) - s ))" >> compile_log.txt
   else
     touch "${f%.v}.fail"
-    echo "FAIL $f $(( $(date +%s) - s )) $(echo "$out" | grep -m1 -E 'Error|Killed|line [0-9]+')" >> compile_log.txt
+    # the error itself (with its location line before it), not the first warning; else the last line (timeout: empty)
+    err=$(echo "$out" | grep -m1 -B1 -E 'Error|Killed' | tr '\n' ' ')
+    echo "FAIL $f $(( $(date +%s) - s )) ${err:-$(echo "$out" | tail -1)}" >> compile_log.txt
   fi
 }
 export -f one

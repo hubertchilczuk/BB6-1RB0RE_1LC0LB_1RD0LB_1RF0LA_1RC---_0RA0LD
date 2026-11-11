@@ -1,0 +1,5 @@
+batches: 21, rc=0: 21
+Print Assumptions answers:
+    779 Closed under the global context
+Axiom/Admitted/... in any .v file (N F S A2 D B3 C):
+(end of list)

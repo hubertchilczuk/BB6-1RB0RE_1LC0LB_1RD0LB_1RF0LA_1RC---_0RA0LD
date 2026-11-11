@@ -1,0 +1,24 @@
+Require Close_5862485f_0.
+Require Close_5862485f_1.
+Require Close_a8e78d9d_0.
+Require Close_a8e78d9d_1.
+Require Close_b0098ea0_0.
+Require Close_b0098ea0_1.
+Require Close_c125f720_0.
+Require Close_c125f720_1.
+Require Close_f57b21d7_0.
+Require Close_f57b21d7_1.
+Require Close_domx_c125f720_1_r38_h131.
+Require Close_domx_f57b21d7_1_r38_h131.
+Print Assumptions Close_5862485f_0.close_dom_5862485f_0.
+Print Assumptions Close_5862485f_1.close_dom_5862485f_1.
+Print Assumptions Close_a8e78d9d_0.close_dom_a8e78d9d_0.
+Print Assumptions Close_a8e78d9d_1.close_dom_a8e78d9d_1.
+Print Assumptions Close_b0098ea0_0.close_dom_b0098ea0_0.
+Print Assumptions Close_b0098ea0_1.close_dom_b0098ea0_1.
+Print Assumptions Close_c125f720_0.close_dom_c125f720_0.
+Print Assumptions Close_c125f720_1.close_dom_c125f720_1.
+Print Assumptions Close_f57b21d7_0.close_dom_f57b21d7_0.
+Print Assumptions Close_f57b21d7_1.close_dom_f57b21d7_1.
+Print Assumptions Close_domx_c125f720_1_r38_h131.close_domx_c125f720_1_r38_h131.
+Print Assumptions Close_domx_f57b21d7_1_r38_h131.close_domx_f57b21d7_1_r38_h131.

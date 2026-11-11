@@ -22,6 +22,46 @@ Non-halting follows from:
    (`verify4.py`, see below);
 3. **lemmas**: every lemma is a symbolic simulation by `ssim4` under recorded linear constraints.
 
+## Formal proof (Rocq)
+
+`rocq/C/Final.v` proves, in Rocq 8.20 on top of busycoq (`ccz181078/busycoq` at 0bd6d38, `verify/`),
+
+```
+Theorem nonhalt : ~ halts tm c0.      (* tm := TM_from_str "1RB0RE_1LC0LB_1RD0LB_1RF0LA_1RC---_0RA0LD" *)
+```
+
+All files are generated from the proof data by the `rocq/gen*.py` scripts:
+
+| part | files | generator |
+|---|---|---|
+| node configurations, F (domain state shapes), Dom (domain predicate) | `N/Nodes.v`, `F/F.v`, `F/Dom.v` | `genNodes.py`, `genF.py` |
+| start: blank tape -->* start configuration (busycoq's verified concrete simulation) | `S/Start.v` | `genStart.py` |
+| lemma A (one node step, symbolic) | 410 `A2/A_*.v` | `genA2.py` (via `run_gen.py A`) |
+| descent (lemma A iterated q times, induction) | 410 `D/D_*.v` | `genD.py` |
+| lemma B (node exit, symbolic) | 20 122 `B3/B_*.v` + 2 `B3/BX_*.v` | `genB3.py` (via `run_gen.py B`, `regen_strict.py`) |
+| closure (every Dom state has a Dom successor) | 772 `C/Close_*.v` | `genClose.py` |
+| main theorem | `C/Final.v` | `genFinal.py` |
+
+The Rocq proof does not rely on `ssim4`: the symbolic runs are re-checked by busycoq's `es'` and Rocq's kernel.
+
+**Axioms.** `Print Assumptions Final.nonhalt` needs every module plus every opaque proof body in memory (> 12.5 GB;
+killed on a 16 GB machine). It is done in pieces instead (`genPA.py`, `PA/run.sh`): the assumptions of `nonhalt` are
+the union of those of the constants its proof uses, i.e. the 772 `close_*` lemmas (through `closure`; they cover all
+lemma A/B/descent files), `Start.start`, the start descent, `multistep_nonhalt`, `progress_nonhalt`, `evstep_trans`,
+`Dom` and `TM_from_str`. All 779 answers are **"Closed under the global context"**, and no generated `.v` file
+contains `Axiom`/`Parameter`/`Hypothesis`/`Variable`/`Admitted`/`admit` (`PA/summary.txt`). On a machine with
+~32 GB RAM, `coqc C/Assumptions.v` does it in one go.
+
+**Build** (coqorg/coq:8.20 container, busycoq at `/bc`, `rocq/` at `/r`; `compile.sh DIR JOBS`, log `DIR/compile_log.txt`):
+
+```
+for d in N F S A2 D; do ... bash /r/compile.sh /r/$d 6; done       # small parts, minutes (see each generator's header for flags)
+bash /r/compile.sh /r/B3 6                                         # ~200 h CPU; TLIM=7200 for B_3de06db7_r27_0 / r37_0
+QEMPTY="/r/B3 /r/D /r/A2" bash /r/compile.sh /r/C 4                # ~2 min per file, ~25 h CPU
+coqc ... -Q /r/B3 "" -Q /r/D "" -Q /r/A2 "" -Q /r/S "" -Q /r/C "" Final.v   # 7 min, 11.6 GB RAM
+bash /r/PA/run.sh 3                                                # axiom check, ~2 h, ~2.5 GB per job
+```
+
 ## Checks
 
 | check | what | result |
@@ -50,8 +90,10 @@ that `ssim3` made silently:
 - in the cycle accelerator, a constant repetition limit chosen over a symbolic one requires the symbolic one to be >= it.
 
 Independent evidence for the simulators: concrete `fsim` cross-checks of every lemma B (one instance each),
-810 lemma-A instances, 3000 full random cycles and the real trajectory. A formal (e.g. Coq) verification
-of the symbolic simulator is not done.
+810 lemma-A instances, 3000 full random cycles and the real trajectory.
+
+This is the trust base of the *computational* argument only. The Rocq proof (above) does not need `ssim4`: its trust
+base is the Rocq 8.20 kernel and busycoq's definitions of the machine semantics (`TM_from_str`, `halts`, `c0`).
 
 ## Reproduce
 
