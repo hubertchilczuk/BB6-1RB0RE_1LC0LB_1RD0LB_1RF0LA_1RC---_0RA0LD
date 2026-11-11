@@ -35,12 +35,12 @@ i niezależnej recenzji.
       `forall n m, cfg0 n m -->+ cfg130 n (m + 1744)`, 130 pod-lematów między punktami kontrolnymi
       (co 25 przemiatań), każdy przez refleksyjny wykonawca `es'` (ES_v3); kompilacja ~2 min, bez aksjomatów.
       Lemat zachodzi dla WSZYSTKICH n, m (ograniczenia z ssim były artefaktem) -> lematy small-N / small-M zbędne.
-- [ ] 3a. lemat A dla każdego węzła (205, w tym rodziny z symbolicznym k: trzecia zmienna w `es'`)
+- [x] 3a. lemat A dla każdego węzła (205, w tym rodziny z symbolicznym k: trzecia zmienna w `es'`)
       `rocq/gen_lemmaA_all.py` -> `rocq/A/A_<tag>.v`; rodziny wymagają obrotu bloku k3 (`rocq/rot.json`, obrót 1,
       lemat dla k >= 1 kopii); sprawdzone kompilacją: węzeł startowy, węzeł `0 3 1` (27 s), pierwszy pod-lemat rodziny.
       Generowanie w toku (75/205), potem kompilacja wszystkich.
-- [ ] 3b. zejście: indukcja `w^(P*j + n) -> w^n`, `M -> M + j*dM` (jeden ogólny lemat)
-- [ ] 3c. lematy B (20 122): metoda punktów kontrolnych działa także dla konwersji (liczba przemiatań nie zależy
+- [x] 3b. zejście: indukcja `w^(P*j + n) -> w^n`, `M -> M + j*dM` (jeden ogólny lemat)
+- [x] 3c. lematy B (20 122): metoda punktów kontrolnych działa także dla konwersji (liczba przemiatań nie zależy
       od M) - pierwszy lemat B udowodniony (`rocq/gen_lemmaB.py`, `rocq/B/test_B17.v`), bez osobnej indukcji.
       Problem wydajności rozwiązany w `rocq/gen_lemmaB2.py`: każda duża seria (także stała) ma własną zmienną,
       pod-lematy `forall z, cfg_i (z+m) -->+ cfg_(i+1) (z+m+d)`, złożenie przez `f_equal; lia`.
@@ -55,12 +55,12 @@ i niezależnej recenzji.
       lemat B + zejście z div/mod przez lia; 2 wyjątkowe lądowania osobno), start (2,26e8 kroków - potrzebny
       szybki zweryfikowany symulator konkretny z paliwem N, wzór: CubicMess.v steps''/N_iter_until),
       na końcu progress_nonhalt_cond.
-- [ ] 3c' (opis pierwotny). wspólne postaci konfiguracji węzłów dla lematów A i B (ta sama kanoniczna postać serii; zmiana
+- [x] 3c' (opis pierwotny). wspólne postaci konfiguracji węzłów dla lematów A i B (ta sama kanoniczna postać serii; zmiana
       jednostki u -> (uu) i obroty bloków przez ogólne lematy o lpow) - potrzebne do złożenia A i B
-- [ ] 3c''. lematy B dla 4 rodzin (k symboliczne: wnioskowanie afiniczne w (x, y))
-- [ ] 3d. domknięcie: twierdzenie generowane z danych verify4 (przypadki (węzeł, r, parzystość), arytmetyka przez lia)
-- [ ] 3e. start: `c0 -->* konfiguracja startowa` (2,26e8 kroków; zweryfikowany symulator konkretny busycoq)
-- [ ] 3f. złożenie: `~ halts tm c0` przez `progress_nonhalt_cond` z niezmiennikiem „stan w dziedzinie”
+- [x] 3c''. lematy B dla 4 rodzin (k symboliczne: wnioskowanie afiniczne w (x, y))
+- [x] 3d. domknięcie: twierdzenie generowane z danych verify4 (przypadki (węzeł, r, parzystość), arytmetyka przez lia)
+- [x] 3e. start: `c0 -->* konfiguracja startowa` (2,26e8 kroków; zweryfikowany symulator konkretny busycoq)
+- [x] 3f. złożenie: `~ halts tm c0` przez `progress_nonhalt_cond` z niezmiennikiem „stan w dziedzinie”
 
 ### 4. Odtwarzalność
 - [ ] weryfikator, który potrzebuje tylko plików z repo (bez ~20 GB śladów), albo skrypt odtwarzający wejścia
@@ -82,3 +82,8 @@ i niezależnej recenzji.
   z kontekstem, więc konwersja może nie wymagać osobnej indukcji, jeśli liczba przemiatań nie zależy od M -
   `rocq/probe_lemmaB.py` to sprawdza (pierwsze uruchomienie przerwane przez brak pamięci; do powtórzenia z
   mniejszym limitem zdarzeń). Uwaga na pamięć: Docker (8 GB) + 6 procesów generatora naraz to za dużo.
+
+- 2026-11-11: krok 3 zakończony. C/Final.v kompiluje się (`nonhalt : ~ halts tm c0`, 7 min, 11,6 GB RAM);
+  wszystkie 20 122 lematy B, 410 A, 410 zejść i 772 pliki Close skompilowane. Print Assumptions w częściach
+  (genPA.py, PA/run.sh): 779 x „Closed under the global context”, brak aksjomatów w plikach .v. Poprawki genClose:
+  symmetry przed rewrite aliasu (f4c7040), literały nat >= 5000 (20ec463). Zostają kroki 4 i 5.
