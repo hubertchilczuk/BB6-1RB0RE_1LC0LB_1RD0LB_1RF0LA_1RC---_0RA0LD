@@ -63,8 +63,8 @@ i niezależnej recenzji.
 - [x] 3f. złożenie: `~ halts tm c0` przez `progress_nonhalt_cond` z niezmiennikiem „stan w dziedzinie”
 
 ### 4. Odtwarzalność
-- [ ] weryfikator, który potrzebuje tylko plików z repo (bez ~20 GB śladów), albo skrypt odtwarzający wejścia
-- [ ] instrukcja uruchomienia wszystkich kontroli od zera
+- [x] weryfikator, który potrzebuje tylko plików z repo (bez ~20 GB śladów), albo skrypt odtwarzający wejścia
+- [x] instrukcja uruchomienia wszystkich kontroli od zera
 
 ### 5. Zgłoszenie (decyzje i działania użytkownika)
 - [ ] upublicznić repo (lub osobne repo / PR do busycoq z samym dowodem Rocq)
@@ -87,3 +87,5 @@ i niezależnej recenzji.
   wszystkie 20 122 lematy B, 410 A, 410 zejść i 772 pliki Close skompilowane. Print Assumptions w częściach
   (genPA.py, PA/run.sh): 779 x „Closed under the global context”, brak aksjomatów w plikach .v. Poprawki genClose:
   symmetry przed rewrite aliasu (f4c7040), literały nat >= 5000 (20ec463). Zostają kroki 4 i 5.
+- 2026-11-11: krok 4: rocq/build_all.sh (cały build + sprawdzenie aksjomatów), źródła .v jako asset release'u
+  rocq-proof-1 (25,5 MB xz), wejścia generatorów w git, README: build i regeneracja. Zostaje krok 5 (decyzja użytkownika).
