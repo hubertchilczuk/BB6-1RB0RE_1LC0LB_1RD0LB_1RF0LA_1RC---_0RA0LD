@@ -39,7 +39,8 @@ v += ['Qed.', '',
       '    apply D_%s_%d.F_%s_%d_descent; lia.' % (START, PAR, START, PAR),
       '  - apply (progress_nonhalt _ Dom); [exact closure |].',
       '    apply dom_%s_%d; lia.' % (START, PAR),
-      'Qed.', '',
-      'Print Assumptions nonhalt.']
+      'Qed.']
 open(OUT + 'Final.v', 'w').write('\n'.join(v) + '\n')
+# separate file: loading Final already needs ~12 GB, and Print Assumptions also forces every opaque proof body
+open(OUT + 'Assumptions.v', 'w').write('Require Final.\nPrint Assumptions Final.nonhalt.\n')
 print('Final.v: %d Dom constructors' % len(ctors))
