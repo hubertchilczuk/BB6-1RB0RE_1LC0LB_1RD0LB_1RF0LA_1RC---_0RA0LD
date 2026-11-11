@@ -42,3 +42,4 @@ rocq/F/dom.json
 rocq/C/
 rocq/reach.json
 rocq/F/exc.json
+__pycache__/
