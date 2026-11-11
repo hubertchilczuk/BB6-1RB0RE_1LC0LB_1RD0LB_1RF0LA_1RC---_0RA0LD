@@ -2,7 +2,8 @@
 # Compile every .v file of a directory that has no up-to-date .vo, in parallel; one line per file in compile_log.txt:
 #   OK <file> <seconds>   or   FAIL <file> <seconds> <first error line>
 # usage (inside the coqorg/coq:8.20 container, busycoq at /bc, this repo's rocq dir at /r):
-#   compile.sh DIR [JOBS]        extra coqc flags in EXTRA; QEMPTY="dir1 dir2" maps directories to the empty prefix
+#   compile.sh DIR [JOBS]        extra coqc flags in EXTRA; QEMPTY="dir1 dir2" maps directories to the empty prefix;
+#                                PAT selects the files (default *.v); TLIM is the time limit per file (default 1500 s)
 DIR=$1; JOBS=${2:-3}
 cd "$DIR" || exit 1
 ulimit -s unlimited   # es' on long lemma B files overflows the default 8 MB stack
@@ -22,5 +23,5 @@ one() {
   fi
 }
 export -f one
-ls *.v | xargs -P "$JOBS" -I{} bash -c 'one {}'
+ls ${PAT:-*.v} | xargs -P "$JOBS" -I{} bash -c 'one {}'
 echo DONE >> compile_log.txt
